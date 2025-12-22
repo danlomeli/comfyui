@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ render_partial('partials/template/head.html', title="Service Portal", context=context) }}
+    </head>
+    <body>
+        {{ render_partial('partials/template/stripe.html', context=context) }}
+        <div class="one-col">
+            {{ render_partial('partials/template/header.html', context=context) }}
+            <div id="page">
+                {{ render_partial('partials/index/page.html', context=context) }}
+            </div>
+            {{ render_partial('partials/template/about.html', context=context) }}
+            {{ render_partial('partials/template/footer.html', context=context) }}
+    </div>
+    {{ render_partial('partials/template/scripts.html', context=context) }}
+  </body>
+</html>

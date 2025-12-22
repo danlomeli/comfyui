@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: DockerfileS
+    image: ${IMAGE:-danielfarpoint/comfyui:latest}
+    container_name: comfyui
+    
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    
+    ports:
+      - "8188:8188"
+      - "22:22"
+    
+    volumes:
+      - ./models/checkpoints:/workspace/ComfyUI/models/checkpoints:rprivate
+      - ./models/vae:/workspace/ComfyUI/models/vae:rprivate
+      - ./models/loras:/workspace/ComfyUI/models/loras:rprivate
+      - ./models/controlnet:/workspace/ComfyUI/models/controlnet:rprivate
+      - ./input:/workspace/ComfyUI/input:rprivate
+      - ./output:/workspace/ComfyUI/output:rprivate
+    
+    environment:
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      - CUDA_VISIBLE_DEVICES=0
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
